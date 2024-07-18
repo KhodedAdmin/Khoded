@@ -47,6 +47,7 @@ class Employee(id: EntityID<Int>) : IntEntity(id) {
 //User Table
 object KhodedUsers : UUIDTable("Users") {
     val name = varchar("Name", BASE_VARCHAR_LENGTH)
+    val userName = varchar("username", BASE_VARCHAR_LENGTH).uniqueIndex()
     val email = varchar("Email", BASE_VARCHAR_LENGTH)
     val phone = varchar("Phone", 10)
     val password = varchar("Password", BASE_VARCHAR_LENGTH)
@@ -60,6 +61,7 @@ class User(id: EntityID<UUID>) : UUIDEntity(id) {
     companion object : UUIDEntityClass<User>(KhodedUsers)
 
     var name by KhodedUsers.name
+    val userName by KhodedUsers.userName
     var email by KhodedUsers.email
     var phone by KhodedUsers.phone
     var createdAt by KhodedUsers.createdAt

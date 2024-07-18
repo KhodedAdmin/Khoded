@@ -11,14 +11,6 @@ import model.serialization.json
 
 
 fun Application.configureRouting() {
-    install(StatusPages) {
-        exception(IllegalStateException::class) { call, cause ->
-            call.respondText("Application in Illegal State: ${cause.message}")
-        }
-    }
-    install(ContentNegotiation){
-        json
-    }
     applyUserRoutes()
     routing {
         get("/") {

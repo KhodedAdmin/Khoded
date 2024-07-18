@@ -1,6 +1,9 @@
 package com.probro.khoded
 
 import SERVER_PORT
+import com.probro.khoded.configurations.configureAuthentication
+import com.probro.khoded.configurations.configureExceptions
+import com.probro.khoded.configurations.configureJson
 import com.probro.khoded.routing.configureRouting
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
@@ -12,5 +15,8 @@ fun main() {
 }
 
 fun Application.module() {
+    configureAuthentication()
+    configureExceptions()
+    configureJson()
     configureRouting()
 }

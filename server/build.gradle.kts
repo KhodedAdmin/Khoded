@@ -1,9 +1,7 @@
-import com.codingfeline.buildkonfig.compiler.FieldSpec
-import java.util.Properties
-
 plugins {
     alias(libs.plugins.kotlinJvm)
     alias(libs.plugins.ktor)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.flyway)
     application
 }
@@ -21,6 +19,7 @@ dependencies {
     implementation(libs.logback)
     implementation(libs.ktor.server.core)
     implementation(libs.ktor.server.netty)
+    implementation(libs.ktor.auth)
     implementation(libs.ktor.sessions)
     implementation(libs.ktor.statusPages)
     implementation(libs.ktor.content.negotiation)

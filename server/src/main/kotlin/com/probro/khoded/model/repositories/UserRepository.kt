@@ -1,27 +1,44 @@
 package com.probro.khoded.model.repositories
 
-import com.probro.khoded.model.local.KhodedDB
+import com.probro.khoded.model.local.datatables.KhodedUsers
 import com.probro.khoded.model.local.datatables.User
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import kotlinx.datetime.Clock
+import org.jetbrains.exposed.sql.ResultRow
+import org.jetbrains.exposed.sql.selectAll
+import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 
-class UserRepository {
+object UserRepository {
 
-    suspend fun createUser(
-        name: String,
-        phone: String,
-        email: String,
-        password: String
-    ) = withContext(Dispatchers.IO) {
-        KhodedDB.createNewUser(name, phone, email, password)
+    suspend fun findUserByName(userName: String): List<ResultRow> {
+        return KhodedUsers.selectAll().where { KhodedUsers.name eq userName }
+            .distinct()
     }
 
-    suspend fun updateUserInformation(user: User) {
-        KhodedDB.updateUser(user)
+    suspend fun createNewUser(
+        name: String, email: String, phone: String, password: String
+    ) = newSuspendedTransaction {
+        User.new {
+            this.name = name
+            this.email = email
+            this.phone = phone
+            this.password = password
+            this.createdAt = Clock.System.now()
+        }
     }
 
-    suspend fun deleteUser(user: User) {
-        KhodedDB.deleteUser(user)
+    suspend fun updateUser(user: User) = newSuspendedTransaction {
+        User.findByIdAndUpdate(user.id.value) { userToUpdate ->
+            userToUpdate.apply {
+                name = user.name
+                email = user.email
+                phone = user.phone
+                password = user.password
+            }
+        }
+    }
+
+    suspend fun deleteUser(user: User) = newSuspendedTransaction {
+        User.removeFromCache(user)
     }
 
 }

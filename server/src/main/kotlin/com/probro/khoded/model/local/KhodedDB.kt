@@ -2,7 +2,6 @@ package com.probro.khoded.model.local
 
 import Project
 import Projects
-import com.probro.khoded.local.datatables.*
 import com.probro.khoded.model.local.datatables.*
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
@@ -11,7 +10,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
-import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.LocalDateTime
 import model.utils.PostgresUtils
 import org.jetbrains.exposed.sql.Database
@@ -51,33 +49,6 @@ object KhodedDB {
         SchemaUtils.create(KhodedUsers)
         SchemaUtils.create(Projects)
         SchemaUtils.create(Consultations)
-    }
-
-    suspend fun createNewUser(
-        name: String, email: String, phone: String, password: String
-    ) = newSuspendedTransaction {
-        User.new {
-            this.name = name
-            this.email = email
-            this.phone = phone
-            this.password = password
-            this.createdAt = Clock.System.now()
-        }
-    }
-
-    suspend fun updateUser(user: User) = newSuspendedTransaction {
-        User.findByIdAndUpdate(user.id.value) { userToUpdate ->
-            userToUpdate.apply {
-                name = user.name
-                email = user.email
-                phone = user.phone
-                password = user.password
-            }
-        }
-    }
-
-    suspend fun deleteUser(user: User) = newSuspendedTransaction {
-        User.removeFromCache(user)
     }
 
     suspend fun createProjectForUser(
