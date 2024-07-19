@@ -51,6 +51,10 @@ ktor-sessions = { module = "io.ktor:ktor-server-sessions", version.ref = "ktor" 
 ktor-statusPages = { module = "io.ktor:ktor-server-status-pages", version.ref = "ktor" }
 ktor-content-negotiation = { module = "io.ktor:ktor-server-content-negotiation", version.ref = "ktor" }
 ktor-auth = { module = "io.ktor:ktor-server-auth", version.ref = "ktor" }
+ktor-cors = { module = "io.ktor:ktor-server-cors", version.ref = "ktor" }
+ktor-resources = { module = "io.ktor:ktor-server-resources", version.ref = "ktor" }
+ktor-validation = { module = "io.ktor:ktor-server-request-validation", version.ref = "ktor" }
+ktor-autoHeader = { module = "io.ktor:ktor-server-auto-head-response", version.ref = "ktor" }
 
 exposed-core = { module = "org.jetbrains.exposed:exposed-core", version.ref = "exposedVersion" }
 exposed-crypt = { module = "org.jetbrains.exposed:exposed-crypt", version.ref = "exposedVersion" }

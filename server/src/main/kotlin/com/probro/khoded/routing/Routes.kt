@@ -20,4 +20,6 @@ object Routes {
             override val route: String = "$BASE_USER_ROUTE/deleteUser"
         }
     }
+
+
 }

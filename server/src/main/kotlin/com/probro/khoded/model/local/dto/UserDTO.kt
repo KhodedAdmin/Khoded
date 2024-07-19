@@ -8,5 +8,11 @@ data class UserDTO(
     val name: String = "",
     val email: String = "",
     val phone: String = "",
-    val password: String = ""
+    val password: String = "",
+    val confirmPassword: String = "",
+    val role: Role = Role.GUEST
 )
+
+enum class Role {
+    GUEST, CUSTOMER, EMPLOYEE, ADMIN
+}

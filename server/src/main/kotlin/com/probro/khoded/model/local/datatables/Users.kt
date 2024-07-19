@@ -52,6 +52,7 @@ object KhodedUsers : UUIDTable("Users") {
     val phone = varchar("Phone", 10)
     val password = varchar("Password", BASE_VARCHAR_LENGTH)
     val createdAt = timestamp("CreatedAt")
+    val role = varchar("Role", BASE_VARCHAR_LENGTH)
     val customerDetails = optReference("CustomerDetails", Customers)
     val employeeDetails = optReference("EmployeeDetails", Employees)
 }
@@ -62,6 +63,7 @@ class User(id: EntityID<UUID>) : UUIDEntity(id) {
 
     var name by KhodedUsers.name
     val userName by KhodedUsers.userName
+    val role by KhodedUsers.role
     var email by KhodedUsers.email
     var phone by KhodedUsers.phone
     var createdAt by KhodedUsers.createdAt
