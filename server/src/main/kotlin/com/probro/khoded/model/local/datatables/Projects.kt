@@ -19,7 +19,6 @@ object Projects : UUIDTable("Projects") {
 
 class Project(id: EntityID<UUID>) : UUIDEntity(id) {
     companion object : UUIDEntityClass<Project>(Projects)
-
     var name by Projects.name
     var description by Projects.description
     var createdAt by Projects.createdAt

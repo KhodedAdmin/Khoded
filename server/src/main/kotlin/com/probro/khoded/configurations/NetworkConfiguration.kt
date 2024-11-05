@@ -16,11 +16,11 @@ fun Application.configureNetwork() {
                     ValidationResult.Invalid("Passwords do not match.")
                 }
 
-                user.name.isEmpty() -> {
+                user.name?.isNullOrEmpty() == true -> {
                     ValidationResult.Invalid("Name is a required field.")
                 }
 
-                user.email.isEmpty() && user.phone.isEmpty() -> {
+                user.email?.isNullOrEmpty() == true && user.phone?.isNullOrEmpty() == true -> {
                     ValidationResult.Invalid("Contact info is required for account validation.")
                 }
 

@@ -4,15 +4,15 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class UserDTO(
-    val id: String = "",
-    val name: String = "",
-    val email: String = "",
-    val phone: String = "",
-    val password: String = "",
-    val confirmPassword: String = "",
-    val role: Role = Role.GUEST
+    var id: String? = "",
+    var name: String? = "",
+    var email: String? = "",
+    var phone: String? = "",
+    var password: String? = "",
+    var confirmPassword: String? = "",
+    var role: String? = Role.GUEST.value
 )
 
-enum class Role {
-    GUEST, CUSTOMER, EMPLOYEE, ADMIN
+enum class Role(var value: String) {
+    GUEST("guest"), CUSTOMER("customer"), EMPLOYEE("employee"), ADMIN("admin")
 }

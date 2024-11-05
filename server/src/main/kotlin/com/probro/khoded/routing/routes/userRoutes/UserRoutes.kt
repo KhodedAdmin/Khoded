@@ -1,15 +1,19 @@
 package com.probro.khoded.routing.routes.userRoutes
 
 import com.probro.khoded.configurations.AuthTypes
+import com.probro.khoded.model.local.dto.Role
 import io.ktor.resources.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
+import io.ktor.server.resources.Resources
 import io.ktor.server.routing.*
 
-@Resource("/users")
+@Resource("users")
 class Users() {
     @Resource("register")
-    class Register(val parent: Users)
+    class Register(var role: String? = Role.GUEST.value, val parent: Users)
+    @Resource("login")
+    class Login(var role: String? = Role.GUEST.value, val parent: Users)
 
     @Resource("edit")
     class Edit(val parent: Users)
@@ -21,6 +25,7 @@ class Users() {
 fun Application.userRouting() {
     routing {
         registerUser()
+        login()
         authenticate(AuthTypes.BASE_AUTH.name) {
             getUsers()
             editUser()
