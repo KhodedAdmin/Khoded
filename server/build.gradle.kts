@@ -1,9 +1,7 @@
-import com.codingfeline.buildkonfig.compiler.FieldSpec
-import java.util.Properties
-
 plugins {
     alias(libs.plugins.kotlinJvm)
     alias(libs.plugins.ktor)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.flyway)
     application
 }
@@ -20,7 +18,13 @@ dependencies {
     implementation(projects.shared)
     implementation(libs.logback)
     implementation(libs.ktor.server.core)
+    implementation(libs.ktor.server.test)
     implementation(libs.ktor.server.netty)
+    implementation(libs.ktor.auth)
+    implementation(libs.ktor.cors)
+    implementation(libs.ktor.resources)
+    implementation(libs.ktor.validation)
+    implementation(libs.ktor.autoHeader)
     implementation(libs.ktor.sessions)
     implementation(libs.ktor.statusPages)
     implementation(libs.ktor.content.negotiation)
@@ -44,14 +48,13 @@ dependencies {
 
     testImplementation(libs.ktor.server.tests)
     testImplementation(libs.kotlin.test.junit)
-
 }
 
 flyway {
     driver = "org.postgresql.driver"
-    url = "jdbc:postgresql://localhost:5432/khodedBackendData"
-    user = "admin"
-    password = "khodedData"
+    url = "jdbc:postgresql://localhost:5432/khoded_backend"
+    user = "khoeded_dev"
+    password = "a97toUMhqtaFLthRcv7iysmLqtv5HGrR"
     schemas = arrayOf("khoded_base_state")
     defaultSchema = "khoded_base_state"
 }

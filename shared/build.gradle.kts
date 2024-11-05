@@ -30,7 +30,7 @@ kotlin {
     androidTarget {
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
+            jvmTarget.set(JvmTarget.JVM_17)
         }
     }
 
@@ -52,8 +52,8 @@ android {
     namespace = "com.probro.khoded.shared"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     defaultConfig {
         minSdk = libs.versions.android.minSdk.get().toInt()
@@ -107,11 +107,19 @@ buildkonfig {
 
 
         //Postgres values
-        buildConfigField(FieldSpec.Type.STRING, "devUri", "dev_Uri")
-        buildConfigField(FieldSpec.Type.STRING, "devUsername", "test_user")
-        buildConfigField(FieldSpec.Type.STRING, "devPassword", "test_password")
-        buildConfigField(FieldSpec.Type.STRING, "prodUri", "prod_uri")
-        buildConfigField(FieldSpec.Type.STRING, "prodUsername", "prod_user")
-        buildConfigField(FieldSpec.Type.STRING, "prodPassword", "prod_password")
+        buildConfigField(FieldSpec.Type.STRING, "devUri", properties.getProperty("dev_uri"))
+        buildConfigField(FieldSpec.Type.STRING, "devUsername", properties.getProperty("dev_user"))
+        buildConfigField(
+            FieldSpec.Type.STRING,
+            "devPassword",
+            properties.getProperty("dev_password")
+        )
+        buildConfigField(FieldSpec.Type.STRING, "prodUri", properties.getProperty("prod_uri"))
+        buildConfigField(FieldSpec.Type.STRING, "prodUsername", properties.getProperty("prod_user"))
+        buildConfigField(
+            FieldSpec.Type.STRING,
+            "prodPassword",
+            properties.getProperty("prod_password")
+        )
     }
 }

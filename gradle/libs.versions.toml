@@ -1,27 +1,27 @@
 [versions]
-agp = "8.2.0"
+agp = "8.7.1"
 android-compileSdk = "34"
 android-minSdk = "24"
 android-targetSdk = "34"
-androidx-activityCompose = "1.9.0"
+androidx-activityCompose = "1.9.3"
 androidx-appcompat = "1.7.0"
 androidx-constraintlayout = "2.1.4"
 androidx-core-ktx = "1.13.1"
-androidx-espresso-core = "3.6.0"
+androidx-espresso-core = "3.6.1"
 androidx-material = "1.12.0"
-androidx-test-junit = "1.2.0"
-compose-plugin = "1.6.11"
+androidx-test-junit = "1.2.1"
+compose-plugin = "1.7.0"
 junit = "4.13.2"
-kotlin = "2.0.0"
-ktor = "2.3.12"
+kotlin = "2.0.21"
+ktor = "3.0.0"
 logback = "1.5.6"
 #Added IN
-exposedVersion = "0.51.1"
-hikaricp = "5.1.0"
-kotlinx-serialization = "1.6.3"
-buildKonfig = "0.15.1"
-flyway = "10.0.0"
-postgresql = "42.7.1"
+exposedVersion = "0.55.0"
+hikaricp = "6.0.0"
+kotlinx-serialization = "1.7.3"
+buildKonfig = "0.15.2"
+flyway = "10.20.1"
+postgresql = "42.7.4"
 kotlinMailer = "0.2.0"
 
 googleApiClient = "2.0.0"
@@ -29,7 +29,7 @@ googleApiServicesGmail = "v1-rev20220404-2.0.0"
 googleAuthLibraryOauth2Http = "1.19.0"
 googleHttpClient = "1.43.1"
 googleOauthClientJetty = "1.34.1"
-toolsCore = "1.0.0-alpha09"
+toolsCore = "1.0.0-alpha10"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -44,13 +44,18 @@ androidx-constraintlayout = { group = "androidx.constraintlayout", name = "const
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
 logback = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 ktor-server-core = { module = "io.ktor:ktor-server-core-jvm", version.ref = "ktor" }
+ktor-server-test = { module = "io.ktor:ktor-server-test-host", version.ref = "ktor" }
 ktor-server-netty = { module = "io.ktor:ktor-server-netty-jvm", version.ref = "ktor" }
-ktor-server-tests = { module = "io.ktor:ktor-server-tests-jvm", version.ref = "ktor" }
+ktor-server-tests = { module = "io.ktor:ktor-server-tests-jvm", version = "2.3.12" }
 #Added IN
 ktor-sessions = { module = "io.ktor:ktor-server-sessions", version.ref = "ktor" }
 ktor-statusPages = { module = "io.ktor:ktor-server-status-pages", version.ref = "ktor" }
 ktor-content-negotiation = { module = "io.ktor:ktor-server-content-negotiation", version.ref = "ktor" }
 ktor-auth = { module = "io.ktor:ktor-server-auth", version.ref = "ktor" }
+ktor-cors = { module = "io.ktor:ktor-server-cors", version.ref = "ktor" }
+ktor-resources = { module = "io.ktor:ktor-server-resources", version.ref = "ktor" }
+ktor-validation = { module = "io.ktor:ktor-server-request-validation", version.ref = "ktor" }
+ktor-autoHeader = { module = "io.ktor:ktor-server-auto-head-response", version.ref = "ktor" }
 
 exposed-core = { module = "org.jetbrains.exposed:exposed-core", version.ref = "exposedVersion" }
 exposed-crypt = { module = "org.jetbrains.exposed:exposed-crypt", version.ref = "exposedVersion" }
@@ -82,6 +87,7 @@ kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 ktor = { id = "io.ktor.plugin", version.ref = "ktor" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 #Added IN
+kotlin-gradle-annotations = { id = "org.jetbrains.kotlin.kotlin-gradle-plugin-annotations", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 build-konfig = { id = "com.codingfeline.buildkonfig", version.ref = "buildKonfig" }
 flyway = { id = "org.flywaydb.flyway", version.ref = "flyway" }

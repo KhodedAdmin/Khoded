@@ -1,6 +1,7 @@
 package com.probro.khoded
 
 import SERVER_PORT
+import com.probro.khoded.configurations.*
 import com.probro.khoded.routing.configureRouting
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
@@ -12,5 +13,10 @@ fun main() {
 }
 
 fun Application.module() {
+    configureAuthentication()
+    configureExceptions()
+    configureJson()
+    configureNetwork()
+    configureSessions()
     configureRouting()
 }

@@ -2,36 +2,68 @@ package com.probro.khoded.model.local
 
 import Project
 import Projects
-import com.probro.khoded.local.datatables.*
-import com.probro.khoded.model.local.datatables.*
+import com.probro.khoded.model.local.datatables.Consultation
+import com.probro.khoded.model.local.datatables.Consultations
+import com.probro.khoded.model.local.datatables.Customers
+import com.probro.khoded.model.local.datatables.Employees
+import com.probro.khoded.model.local.datatables.KhodedUsers
+import com.probro.khoded.model.local.datatables.User
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
-import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.LocalDateTime
 import model.utils.PostgresUtils
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
+import org.jetbrains.exposed.sql.transactions.transaction
 
 const val IS_PROD: Boolean = false
 const val POSTGRES_DRIVER = "org.postgresql.Driver"
 
-object KhodedDB {
-    val db by lazy {
-        val config = HikariConfig().apply {
-            jdbcUrl = if (IS_PROD) PostgresUtils.prodURI else PostgresUtils.devURI
-            driverClassName = POSTGRES_DRIVER
-            username = if (IS_PROD) PostgresUtils.prodUserName else PostgresUtils.devUserName
-            password = if (IS_PROD) PostgresUtils.prodPassword else PostgresUtils.devPassword
-            maximumPoolSize = 10
+class KhodedDB {
+
+    companion object {
+        val db by lazy {
+            getExposedDB().also {
+                setUpSchemaTables()
+            }
         }
-        val datasource = HikariDataSource(config)
-        Database.connect(datasource = datasource)
+        private var _db: Database? = null
+        private val config by lazy {
+            HikariConfig().apply {
+                jdbcUrl = if (IS_PROD) PostgresUtils.prodURI else PostgresUtils.devURI
+                driverClassName = POSTGRES_DRIVER
+                username = if (IS_PROD) PostgresUtils.prodUserName else PostgresUtils.devUserName
+                password = if (IS_PROD) PostgresUtils.prodPassword else PostgresUtils.devPassword
+                maximumPoolSize = 10
+                println(
+                    "Uri: ${PostgresUtils.devURI} \nUsername: ${PostgresUtils.devUserName} " +
+                            "\nPassword: ${PostgresUtils.devPassword}"
+                )
+            }
+        }
+
+        private fun getExposedDB(): Database {
+            return _db ?: synchronized(this) {
+                _db ?: run {
+                    val datasource = HikariDataSource(config)
+                    Database.connect(datasource = datasource)
+                }
+            }
+        }
+
+        private fun setUpSchemaTables() = transaction {
+            SchemaUtils.create(Customers)
+            SchemaUtils.create(Employees)
+            SchemaUtils.create(KhodedUsers)
+            SchemaUtils.create(Projects)
+            SchemaUtils.create(Consultations)
+        }
+
     }
 
     private val dataScope =
@@ -39,46 +71,6 @@ object KhodedDB {
             throwable.printStackTrace()
         })
 
-    init {
-        dataScope.launch {
-            setUpSchemaTables()
-        }
-    }
-
-    private suspend fun setUpSchemaTables() = newSuspendedTransaction {
-        SchemaUtils.create(Customers)
-        SchemaUtils.create(Employees)
-        SchemaUtils.create(KhodedUsers)
-        SchemaUtils.create(Projects)
-        SchemaUtils.create(Consultations)
-    }
-
-    suspend fun createNewUser(
-        name: String, email: String, phone: String, password: String
-    ) = newSuspendedTransaction {
-        User.new {
-            this.name = name
-            this.email = email
-            this.phone = phone
-            this.password = password
-            this.createdAt = Clock.System.now()
-        }
-    }
-
-    suspend fun updateUser(user: User) = newSuspendedTransaction {
-        User.findByIdAndUpdate(user.id.value) { userToUpdate ->
-            userToUpdate.apply {
-                name = user.name
-                email = user.email
-                phone = user.phone
-                password = user.password
-            }
-        }
-    }
-
-    suspend fun deleteUser(user: User) = newSuspendedTransaction {
-        User.removeFromCache(user)
-    }
 
     suspend fun createProjectForUser(
         user: User,
