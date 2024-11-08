@@ -1,6 +1,6 @@
 package com.probro.khoded.model.repositories
 
-import com.probro.khoded.model.local.KhodedDB
+import com.probro.khoded.model.local.KhodedLocalDataSource
 import com.probro.khoded.model.local.datatables.KhodedUsers
 import com.probro.khoded.model.local.datatables.User
 import com.probro.khoded.model.local.dto.UserDTO
@@ -11,14 +11,14 @@ import java.util.UUID
 
 object UserRepository {
 
-    suspend fun getAllUsers(): List<UserDTO> = newSuspendedTransaction(db = KhodedDB.db) {
+    suspend fun getAllUsers(): List<UserDTO> = newSuspendedTransaction(db = KhodedLocalDataSource.db) {
         KhodedUsers.selectAll().distinct().map { resultRow ->
             User.wrapRow(resultRow)
                 .toDTO()
         }
     }
 
-    suspend fun getUserByID(id: UUID): User = newSuspendedTransaction(db = KhodedDB.db) {
+    suspend fun getUserByID(id: UUID): User = newSuspendedTransaction(db = KhodedLocalDataSource.db) {
         KhodedUsers.selectAll().where { KhodedUsers.id eq id }
             .first()
             .let {
@@ -27,7 +27,7 @@ object UserRepository {
     }
 
     suspend fun findUserByName(userName: String): List<User> =
-        newSuspendedTransaction(db = KhodedDB.db) {
+        newSuspendedTransaction(db = KhodedLocalDataSource.db) {
             KhodedUsers.selectAll().where { KhodedUsers.name eq userName }
                 .distinct()
                 .map {
@@ -37,7 +37,7 @@ object UserRepository {
 
     suspend fun createNewUser(
         newUser: UserDTO
-    ) = newSuspendedTransaction(db = KhodedDB.db) {
+    ) = newSuspendedTransaction(db = KhodedLocalDataSource.db) {
         User.new {
             this.name = newUser.name.toString()
             this.email = newUser.email.toString()
@@ -49,7 +49,7 @@ object UserRepository {
         }
     }
 
-    suspend fun updateUser(user: UserDTO) = newSuspendedTransaction(db = KhodedDB.db) {
+    suspend fun updateUser(user: UserDTO) = newSuspendedTransaction(db = KhodedLocalDataSource.db) {
         User.findByIdAndUpdate(UUID.fromString(user.id)) { userToUpdate ->
             userToUpdate.apply {
                 name = user.name.toString()
@@ -60,7 +60,7 @@ object UserRepository {
         }
     }
 
-    suspend fun deleteUser(userID: UUID) = newSuspendedTransaction(db = KhodedDB.db) {
+    suspend fun deleteUser(userID: UUID) = newSuspendedTransaction(db = KhodedLocalDataSource.db) {
         getUserByID(userID)
             .delete()
     }

@@ -47,6 +47,7 @@ ktor-server-core = { module = "io.ktor:ktor-server-core-jvm", version.ref = "kto
 ktor-server-test = { module = "io.ktor:ktor-server-test-host", version.ref = "ktor" }
 ktor-server-netty = { module = "io.ktor:ktor-server-netty-jvm", version.ref = "ktor" }
 ktor-server-tests = { module = "io.ktor:ktor-server-tests-jvm", version = "2.3.12" }
+ktor-client-contentNegotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
 #Added IN
 ktor-sessions = { module = "io.ktor:ktor-server-sessions", version.ref = "ktor" }
 ktor-statusPages = { module = "io.ktor:ktor-server-status-pages", version.ref = "ktor" }

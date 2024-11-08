@@ -1,7 +1,9 @@
 package com.probro.khoded.configurations
 
-import io.ktor.server.application.*
-import io.ktor.server.sessions.*
+import io.ktor.server.application.Application
+import io.ktor.server.application.install
+import io.ktor.server.sessions.Sessions
+import io.ktor.server.sessions.cookie
 import kotlinx.serialization.Serializable
 
 fun Application.configureSessions() {
@@ -15,9 +17,10 @@ fun Application.configureSessions() {
 
 @Serializable
 data class UserCookie(
-    val userID: String,
-    val userToken: String,
-    val role: String,
+    val userID: String? = "",
+    val userToken: String? = "",
+    val oAuthState: String? = "",
+    val role: String? = "",
     val timestamp: String
 )
 

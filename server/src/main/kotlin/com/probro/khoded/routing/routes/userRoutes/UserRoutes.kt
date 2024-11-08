@@ -12,8 +12,12 @@ import io.ktor.server.routing.*
 class Users() {
     @Resource("register")
     class Register(var role: String? = Role.GUEST.value, val parent: Users)
+
     @Resource("login")
     class Login(var role: String? = Role.GUEST.value, val parent: Users)
+
+    @Resource("callback")
+    class Callback(val parent: Users)
 
     @Resource("edit")
     class Edit(val parent: Users)
@@ -24,8 +28,8 @@ class Users() {
 
 fun Application.userRouting() {
     routing {
+            login()
         registerUser()
-        login()
         authenticate(AuthTypes.BASE_AUTH.name) {
             getUsers()
             editUser()

@@ -1,19 +1,22 @@
 package com.probro.khoded.configurations
 
-import com.probro.khoded.model.local.datatables.KhodedUsers
 import com.probro.khoded.model.repositories.UserRepository
 import com.probro.khoded.routing.routes.userRoutes.Users
+import io.ktor.client.HttpClient
+import io.ktor.http.HttpMethod
 import io.ktor.server.application.Application
 import io.ktor.server.application.install
 import io.ktor.server.auth.Authentication
+import io.ktor.server.auth.OAuthServerSettings
 import io.ktor.server.auth.UserIdPrincipal
 import io.ktor.server.auth.basic
 import io.ktor.server.auth.oauth
 import io.ktor.server.sessions.sessionId
 import io.ktor.server.sessions.sessions
 import kotlinx.datetime.Clock
+import model.utils.OAuthUtils
 
-fun Application.configureAuthentication() {
+fun Application.configureAuthentication(httpClient: HttpClient) {
     install(Authentication) {
         basic(AuthTypes.BASE_AUTH.name) {
             skipWhen { call ->
@@ -41,6 +44,29 @@ fun Application.configureAuthentication() {
 
                 }
             }
+        }
+        oauth(AuthTypes.OAUTH.name) {
+            urlProvider = { "http://localhost:8080/callback" }
+            providerLookup = {
+                OAuthServerSettings.OAuth2ServerSettings(
+                    name = "google",
+                    authorizeUrl = "https://accounts.google.com/o/oauth2/auth",
+                    accessTokenUrl = "https://accounts.google.com/o/oauth2/token",
+                    requestMethod = HttpMethod.Post,
+                    clientId = OAuthUtils.clientID,
+                    clientSecret = OAuthUtils.clientSecret,
+                    // Basic name, email, token
+                    defaultScopes = listOf("https://www.googleapis.com/auth/userinfo.profile"),
+                    extraAuthParameters = listOf("access_type" to "offline"),
+                    onStateCreated = { call, state ->
+                        //saves new state with redirect url value
+                        call.request.queryParameters["redirectUrl"]?.let {
+                            OAuthUtils.redirects[state] = it
+                        }
+                    }
+                )
+            }
+            client = httpClient
         }
     }
 }

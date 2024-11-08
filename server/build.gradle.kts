@@ -20,6 +20,7 @@ dependencies {
     implementation(libs.ktor.server.core)
     implementation(libs.ktor.server.test)
     implementation(libs.ktor.server.netty)
+    implementation(libs.ktor.client.contentNegotiation)
     implementation(libs.ktor.auth)
     implementation(libs.ktor.cors)
     implementation(libs.ktor.resources)

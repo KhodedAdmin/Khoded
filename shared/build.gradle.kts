@@ -121,5 +121,16 @@ buildkonfig {
             "prodPassword",
             properties.getProperty("prod_password")
         )
+        //oAuth Values
+        buildConfigField(
+            FieldSpec.Type.STRING,
+            "AuthClientIDTest",
+            properties.getProperty("oauth_client_id")
+        )
+        buildConfigField(
+            FieldSpec.Type.STRING,
+            "AuthClientSecretTest",
+            properties.getProperty("oauth_client_secret")
+        )
     }
 }
