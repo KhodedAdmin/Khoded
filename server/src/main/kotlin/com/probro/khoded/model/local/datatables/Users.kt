@@ -3,6 +3,7 @@ package com.probro.khoded.model.local.datatables
 import BASE_VARCHAR_LENGTH
 import DECIMAL_PRECISION
 import DECIMAL_SCALE
+import MAX_VARCHAR_LENGTH
 import Project
 import Projects
 import com.probro.khoded.model.local.dto.UserDTO
@@ -46,10 +47,12 @@ class Employee(id: EntityID<UUID>) : UUIDEntity(id) {
 //User Table
 object KhodedUsers : UUIDTable("Users") {
     val name = varchar("Name", BASE_VARCHAR_LENGTH)
-    val userName = varchar("username", BASE_VARCHAR_LENGTH).nullable().default("Bruh")
-    val email = varchar("Email", BASE_VARCHAR_LENGTH)
+    val userName = varchar("username", BASE_VARCHAR_LENGTH).uniqueIndex()
+    val token = varchar("Token", MAX_VARCHAR_LENGTH).uniqueIndex().nullable()
+    val email = varchar("Email", BASE_VARCHAR_LENGTH).uniqueIndex()
     val phone = varchar("Phone", 10)
     val password = varchar("Password", BASE_VARCHAR_LENGTH)
+    val profilePic = varchar("profilePic", MAX_VARCHAR_LENGTH)
     val createdAt = timestamp("CreatedAt")
     val role = varchar("Role", BASE_VARCHAR_LENGTH)
 }
@@ -70,8 +73,7 @@ class User(id: EntityID<UUID>) : UUIDEntity(id) {
             name = name,
             email = email,
             phone = phone,
-            password = password,
-            confirmPassword = password,
+            token = token,
             role = role
         )
     }
@@ -84,7 +86,9 @@ class User(id: EntityID<UUID>) : UUIDEntity(id) {
     var email by KhodedUsers.email
     var phone by KhodedUsers.phone
     var createdAt by KhodedUsers.createdAt
+    var token by KhodedUsers.token
     var password by KhodedUsers.password
+    var profilePic by KhodedUsers.profilePic
 
     val customerDetails by Customer via KhodedCustomerEmployee
     val employeeDetails by Employee via KhodedCustomerEmployee

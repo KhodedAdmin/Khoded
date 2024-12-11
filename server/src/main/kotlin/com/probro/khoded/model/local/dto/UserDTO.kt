@@ -8,8 +8,8 @@ data class UserDTO(
     var name: String? = "",
     var email: String? = "",
     var phone: String? = "",
-    var password: String? = "",
-    var confirmPassword: String? = "",
+    var token: String? = "",
+    var profilePic: String? = "",
     var role: String? = Role.GUEST.value
 )
 

@@ -1,3 +1,6 @@
+import io.ktor.plugin.features.DockerPortMapping
+import io.ktor.plugin.features.DockerPortMappingProtocol
+
 plugins {
     alias(libs.plugins.kotlinJvm)
     alias(libs.plugins.ktor)
@@ -20,6 +23,8 @@ dependencies {
     implementation(libs.ktor.server.core)
     implementation(libs.ktor.server.test)
     implementation(libs.ktor.server.netty)
+    implementation(libs.ktor.client.contentNegotiation)
+    implementation(libs.ktor.client.auth)
     implementation(libs.ktor.auth)
     implementation(libs.ktor.cors)
     implementation(libs.ktor.resources)
@@ -28,6 +33,13 @@ dependencies {
     implementation(libs.ktor.sessions)
     implementation(libs.ktor.statusPages)
     implementation(libs.ktor.content.negotiation)
+
+    //Google Apis
+    implementation(libs.google.api.client)
+    implementation(libs.google.auth.library.credentials)
+    implementation(libs.google.auth.library.oauth2.http)
+    implementation(libs.google.api.services.people)
+    implementation(libs.google.oauth.client.jetty)
 
 
     // Postgresdb
@@ -50,9 +62,30 @@ dependencies {
     testImplementation(libs.kotlin.test.junit)
 }
 
+ktor {
+    fatJar {
+        archiveFileName.set("khodedBackend.jar")
+    }
+//Set up the docker image.
+    docker {
+        jreVersion.set(JavaVersion.VERSION_19)
+        localImageName.set("khodedBackend")
+        imageTag.set("0.0.01")
+        portMappings.set(
+            listOf(
+                DockerPortMapping(
+                    outsideDocker = 8080,
+                    insideDocker = 8080,
+                    protocol = DockerPortMappingProtocol.TCP
+                )
+            )
+        )
+    }
+}
+
 flyway {
     driver = "org.postgresql.driver"
-    url = "jdbc:postgresql://localhost:5432/khoded_backend"
+    url = "jdbc:postgresql://localhost:5432/khodedBackend"
     user = "khoeded_dev"
     password = "a97toUMhqtaFLthRcv7iysmLqtv5HGrR"
     schemas = arrayOf("khoded_base_state")
