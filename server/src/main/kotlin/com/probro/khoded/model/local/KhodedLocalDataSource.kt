@@ -71,30 +71,6 @@ open class KhodedLocalDataSource {
         })
 
 
-    suspend fun createProjectForUser(
-        user: User,
-        name: String,
-        description: String
-    ) = newSuspendedTransaction {
-        Project.new {
-            this.name = name
-            this.description = description
-            this.customer = user
-            this.createdAt = Clock.System.now()
-        }
-    }
-
-    suspend fun updateProject(project: Project) = newSuspendedTransaction {
-        Project.findByIdAndUpdate(project.id.value) { oldProj ->
-            oldProj.name = project.name
-            oldProj.description = project.description
-        }
-    }
-
-    suspend fun deleteProject(project: Project) = newSuspendedTransaction {
-        Project.removeFromCache(project)
-    }
-
     suspend fun createNewConsultation(
         message: String,
         suggestedTimes: List<LocalDateTime>,

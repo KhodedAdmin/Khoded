@@ -77,7 +77,6 @@ object AuthManager {
             .setAccessType("offline")
             .build()
         println("Built the flow object $flow")
-        //TODO: HANDLE THIS PART
 
         val receiver = LocalServerReceiver.Builder().setPort(8888).build()
         println("Built the receiver object $receiver")

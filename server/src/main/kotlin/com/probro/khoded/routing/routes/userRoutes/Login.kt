@@ -37,7 +37,7 @@ fun Route.login() {
                         userToken = principal.accessToken,
                         timestamp = Clock.System.now().toString()
                     )
-                    val user = UserRepository.getUserForToken(principal, cookie)
+                    val user = UserRepository.getUserForToken(principal, cookie)?.toDTO()
                     if (user != null) {
                         cookie.apply {
                             role = user.role
@@ -59,7 +59,7 @@ fun Route.login() {
                     }
                 }
             }
-            val currentUser = UserRepository.currentUser.value
+            val currentUser = UserRepository.currentUser.value?.toDTO()
             val cookie = call.sessions.get(Cookies.USER_COOKIE.value) as UserCookie
             println("current user is $currentUser\ncookie is $cookie.")
             currentUser?.let { user ->

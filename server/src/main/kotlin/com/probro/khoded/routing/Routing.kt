@@ -1,6 +1,7 @@
 package com.probro.khoded.routing
 
 import Greeting
+import com.probro.khoded.routing.routes.projectRoutes.projectRouting
 import com.probro.khoded.routing.routes.userRoutes.userRouting
 import io.ktor.server.application.*
 import io.ktor.server.resources.*
@@ -12,6 +13,7 @@ fun Application.configureRouting() {
     install(Resources)
     defaultRouting()
     userRouting()
+    projectRouting()
 }
 
 fun Application.defaultRouting() {
