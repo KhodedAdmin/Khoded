@@ -2,6 +2,7 @@ package com.probro.khoded.model.repositories
 
 import com.probro.khoded.configurations.UserCookie
 import com.probro.khoded.model.local.datasources.UserDataSource
+import com.probro.khoded.model.local.datatables.User
 import com.probro.khoded.model.local.dto.UserDTO
 import com.probro.khoded.model.remote.auth.AuthManager
 import com.probro.khoded.model.remote.auth.GoogleUserInfo
@@ -19,15 +20,15 @@ object UserRepository {
         UserDataSource()
     }
 
-    private val _currentUser: MutableStateFlow<UserDTO?> = MutableStateFlow(null)
-    val currentUser: StateFlow<UserDTO?> get() = _currentUser.asStateFlow()
+    private val _currentUser: MutableStateFlow<User?> = MutableStateFlow(null)
+    val currentUser: StateFlow<User?> get() = _currentUser.asStateFlow()
 
     suspend fun getUserByUserName(username: String) = userDataSource.findUserByUserName(username)
 
     fun getUserForToken(
         principal: OAuthAccessTokenResponse.OAuth2,
         cookie: UserCookie
-    ): UserDTO? = runBlocking {
+    ): User? = runBlocking {
         println("The received principal is $principal")
         val userJson = AuthManager.getPersonalGreeting(userSession = cookie)
         return@runBlocking try {
@@ -42,7 +43,6 @@ object UserRepository {
                 } ?: run {
                 println("Couldnt find user in Database, creating new local user.")
                 userDataSource.createUserFromGoogleInfo(user, principal.accessToken)
-                    .toDTO()
             }
             println("Returning dto $dto")
             dto
@@ -60,12 +60,11 @@ object UserRepository {
     ) = with(userDataSource) {
         findUserByEmail(user.email)
             .firstOrNull()
-            ?.toDTO()
     }
 
-    private suspend fun updateLocalUser(user: UserDTO) = with(user) {
+    private suspend fun updateLocalUser(user: User) = with(user) {
         println("updating user $this")
-        userDataSource.updateUser(this)
+        userDataSource.updateUser(this.toDTO())
         _currentUser.value = this
     }
 
@@ -91,5 +90,7 @@ object UserRepository {
 
     suspend fun updateUser(user: UserDTO) = userDataSource.updateUser(user)
     suspend fun createNewUser(userDTO: UserDTO) = userDataSource.createNewUser(userDTO)
+    suspend fun findUserByID(userID: String): User =
+        userDataSource.findUserByID(UUID.fromString(userID))
 
 }

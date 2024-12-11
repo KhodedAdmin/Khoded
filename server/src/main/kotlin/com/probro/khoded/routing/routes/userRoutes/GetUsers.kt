@@ -23,7 +23,5 @@ fun Route.getUsers() {
             println(ex.message)
             call.respond(HttpStatusCode.InternalServerError, message = ex.localizedMessage)
         }
-
-
     }
 }
