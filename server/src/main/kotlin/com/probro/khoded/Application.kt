@@ -10,6 +10,7 @@ import com.probro.khoded.model.remote.applicationHttpClient
 import com.probro.khoded.routing.configureRouting
 import io.ktor.client.HttpClient
 import io.ktor.server.application.Application
+import io.ktor.server.config.ApplicationConfig
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 

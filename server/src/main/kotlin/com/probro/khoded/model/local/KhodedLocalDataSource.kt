@@ -24,8 +24,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 const val IS_PROD: Boolean = false
 const val POSTGRES_DRIVER = "org.postgresql.Driver"
 
-class KhodedDB {
-
+open class KhodedLocalDataSource {
     companion object {
         val db by lazy {
             getExposedDB().also {

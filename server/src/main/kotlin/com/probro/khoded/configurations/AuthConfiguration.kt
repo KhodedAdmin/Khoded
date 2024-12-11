@@ -1,5 +1,6 @@
 package com.probro.khoded.configurations
 
+import com.probro.khoded.model.remote.auth.AuthManager
 import com.probro.khoded.model.repositories.UserRepository
 import com.probro.khoded.routing.routes.userRoutes.Users
 import io.ktor.client.HttpClient
@@ -24,13 +25,15 @@ fun Application.configureAuthentication(httpClient: HttpClient) {
             }
             realm = "Access to the '${Users.Edit}' path"
             validate { userPasswordCredential ->
-                val result = UserRepository.findUserByName(userPasswordCredential.name)
+
+                val result = UserRepository.getUserByUserName(userPasswordCredential.name)
                     .firstOrNull { local ->
                         local.name == userPasswordCredential.name
                                 && local.password == userPasswordCredential.password
                     }?.also { user ->
                         sessions.set(
-                            name = Cookies.USER_COOKIE.value, value = UserCookie(
+                            name = Cookies.USER_COOKIE.value,
+                            value = UserCookie(
                                 userID = user.id.value.toString(),
                                 userToken = "",
                                 role = user.role,
@@ -40,13 +43,11 @@ fun Application.configureAuthentication(httpClient: HttpClient) {
                     }
                 result?.userName?.let {
                     UserIdPrincipal(it)
-                } ?: kotlin.run {
-
                 }
             }
         }
         oauth(AuthTypes.OAUTH.name) {
-            urlProvider = { "http://localhost:8080/callback" }
+            urlProvider = { OAuthUtils.callbackURL }
             providerLookup = {
                 OAuthServerSettings.OAuth2ServerSettings(
                     name = "google",
@@ -55,8 +56,8 @@ fun Application.configureAuthentication(httpClient: HttpClient) {
                     requestMethod = HttpMethod.Post,
                     clientId = OAuthUtils.clientID,
                     clientSecret = OAuthUtils.clientSecret,
-                    // Basic name, email, token
-                    defaultScopes = listOf("https://www.googleapis.com/auth/userinfo.profile"),
+                    // Basic name, email, token and the ability to associate user w/ profile
+                    defaultScopes = AuthManager.SCOPES,
                     extraAuthParameters = listOf("access_type" to "offline"),
                     onStateCreated = { call, state ->
                         //saves new state with redirect url value

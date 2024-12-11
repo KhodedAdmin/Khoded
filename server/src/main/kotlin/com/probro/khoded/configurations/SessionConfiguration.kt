@@ -17,12 +17,14 @@ fun Application.configureSessions() {
 
 @Serializable
 data class UserCookie(
-    val userID: String? = "",
+    var userID: String? = "",
     val userToken: String? = "",
     val oAuthState: String? = "",
-    val role: String? = "",
+    var role: String? = "",
     val timestamp: String
 )
+
+
 
 enum class Cookies(val value: String) {
     USER_COOKIE("user-cookie")

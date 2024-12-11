@@ -18,6 +18,14 @@ class Users() {
 
     @Resource("callback")
     class Callback(val parent: Users)
+    @Resource("user_data")
+    class UserData(val parent: Users)
+
+//
+//    var state: String? = "",
+//    var code: String? = "",
+//    var scope: String? = "",
+
 
     @Resource("edit")
     class Edit(val parent: Users)
@@ -28,7 +36,7 @@ class Users() {
 
 fun Application.userRouting() {
     routing {
-            login()
+        login()
         registerUser()
         authenticate(AuthTypes.BASE_AUTH.name) {
             getUsers()
