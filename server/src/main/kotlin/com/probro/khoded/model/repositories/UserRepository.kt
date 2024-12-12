@@ -36,10 +36,7 @@ object UserRepository {
             val dto = getLocalUserByEmail(user)
                 ?.apply {
                     println("found user $this")
-                    profilePic?.ifEmpty { profilePic = user.picture }
-                    name?.ifEmpty { name = user.name }
-                    token = principal.accessToken  //PROBABLY STARTED BECAUSE TOKEN WAS EXPIRED
-                    updateLocalUser(this)
+                    updateLocalUser(this, principal.accessToken, user)
                 } ?: run {
                 println("Couldnt find user in Database, creating new local user.")
                 userDataSource.createUserFromGoogleInfo(user, principal.accessToken)
@@ -62,9 +59,19 @@ object UserRepository {
             .firstOrNull()
     }
 
-    private suspend fun updateLocalUser(user: User) = with(user) {
+    private suspend fun updateLocalUser(
+        user: User,
+        accessToken: String,
+        googleInfo: GoogleUserInfo
+    ) = with(user) {
         println("updating user $this")
-        userDataSource.updateUser(this.toDTO())
+        userDataSource.updateUser(
+            this.toDTO().copy(
+                profilePic = profilePic.ifEmpty { googleInfo.picture }.toString(),
+                name = name.ifEmpty { googleInfo.name }.toString(),
+                token = accessToken  //PROBABLY STARTED BECAUSE TOKEN WAS EXPIRED
+            )
+        )
         _currentUser.value = this
     }
 
