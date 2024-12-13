@@ -3,9 +3,11 @@ package com.probro.khoded.model.local.datasources
 import Project
 import com.probro.khoded.model.local.KhodedLocalDataSource
 import com.probro.khoded.model.local.datatables.User
+import com.probro.khoded.model.local.dto.ProjectDTO
 import kotlinx.datetime.Clock
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
+import java.util.UUID
 
 class ProjectDataSource : KhodedLocalDataSource() {
 
@@ -15,14 +17,20 @@ class ProjectDataSource : KhodedLocalDataSource() {
             .map { Project.wrapRow(it) }
     }
 
+    suspend fun getProjectByID(id: String):Project? = newSuspendedTransaction(db = db) {
+        Projects.selectAll().where { Projects.id eq UUID.fromString(id) }
+            .firstOrNull()?.let {
+                Project.wrapRow(it)
+            }
+    }
+
     suspend fun createProjectForUser(
         user: User,
-        name: String,
-        description: String
+        project:ProjectDTO
     ) = newSuspendedTransaction(db = db) {
         Project.new {
-            this.name = name
-            this.description = description
+            this.name = project.name
+            this.description = project.description
             this.customer = user
             this.createdAt = Clock.System.now()
         }

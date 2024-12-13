@@ -3,15 +3,18 @@ package com.probro.khoded.model.repositories
 import Project
 import com.probro.khoded.model.local.datasources.ProjectDataSource
 import com.probro.khoded.model.local.datatables.User
+import com.probro.khoded.model.local.dto.ProjectDTO
 
 object ProjectRepository {
     private val projectDataSource by lazy {
         ProjectDataSource()
     }
 
+    suspend fun getProjectByID(id: String) = projectDataSource.getProjectByID(id)
+
     suspend fun getProjectsForUserID(userID: String): List<Project> {
         val user = UserRepository.currentUser.value
-        return if (user != null) {
+        return if (user != null && user.id.value.toString() == userID) {
             getProjectsForUser(user)
         } else {
             getProjectsForUser(
@@ -20,7 +23,22 @@ object ProjectRepository {
         }
     }
 
-    private suspend fun getProjectsForUser(user: User): List<Project> {
-        return projectDataSource.getProjectsForUser(user)
+    suspend fun createProjectForUser(userID: String, project: ProjectDTO): Project {
+        val currentUser = UserRepository.currentUser.value
+        return if (currentUser != null && currentUser.id.value.toString() == userID) {
+            createProjectForUser(currentUser, project)
+        } else {
+            createProjectForUser(
+                UserRepository.findUserByID(userID),
+                project
+            )
+        }
     }
+
+    private suspend fun getProjectsForUser(user: User): List<Project> =
+        projectDataSource.getProjectsForUser(user)
+
+    private suspend fun createProjectForUser(user: User, projectDTO: ProjectDTO): Project =
+        projectDataSource.createProjectForUser(user, projectDTO)
+
 }
