@@ -31,6 +31,7 @@ object Projects : UUIDTable("Projects") {
 class Project(id: EntityID<UUID>) : UUIDEntity(id) {
     fun toDTO(): ProjectDTO {
         return ProjectDTO(
+            projectID = id.value.toString(),
             name = name,
             description = description,
             customer = customer.name,

@@ -17,7 +17,7 @@ class ProjectDataSource : KhodedLocalDataSource() {
             .map { Project.wrapRow(it) }
     }
 
-    suspend fun getProjectByID(id: String):Project? = newSuspendedTransaction(db = db) {
+    suspend fun getProjectByID(id: String): Project? = newSuspendedTransaction(db = db) {
         Projects.selectAll().where { Projects.id eq UUID.fromString(id) }
             .firstOrNull()?.let {
                 Project.wrapRow(it)
@@ -26,7 +26,7 @@ class ProjectDataSource : KhodedLocalDataSource() {
 
     suspend fun createProjectForUser(
         user: User,
-        project:ProjectDTO
+        project: ProjectDTO
     ) = newSuspendedTransaction(db = db) {
         Project.new {
             this.name = project.name
@@ -36,8 +36,8 @@ class ProjectDataSource : KhodedLocalDataSource() {
         }
     }
 
-    suspend fun updateProject(project: Project) = newSuspendedTransaction(db = db) {
-        Project.findByIdAndUpdate(project.id.value) { oldProj ->
+    suspend fun updateProject(project: ProjectDTO) = newSuspendedTransaction(db = db) {
+        Project.findByIdAndUpdate(UUID.fromString(project.projectID)) { oldProj ->
             oldProj.name = project.name
             oldProj.description = project.description
         }

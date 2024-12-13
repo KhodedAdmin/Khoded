@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ProjectDTO(
+    val projectID: String = "",
     val name: String = "",
     val description: String = "",
     val customer: String = "",

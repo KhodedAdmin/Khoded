@@ -35,10 +35,27 @@ object ProjectRepository {
         }
     }
 
+    suspend fun deleteProject(projectID: String): Boolean? {
+        val project = getProjectByID(projectID)
+        return if (project != null) {
+            deleteProject(project)
+            getProjectByID(projectID) == null
+        } else {
+            null
+        }
+    }
+
+    suspend fun updateProject(projectUpdates: ProjectDTO): Project? =
+        projectDataSource.updateProject(projectUpdates)
+
     private suspend fun getProjectsForUser(user: User): List<Project> =
         projectDataSource.getProjectsForUser(user)
 
     private suspend fun createProjectForUser(user: User, projectDTO: ProjectDTO): Project =
         projectDataSource.createProjectForUser(user, projectDTO)
+
+    private suspend fun deleteProject(project: Project) =
+        projectDataSource.deleteProject(project)
+
 
 }
