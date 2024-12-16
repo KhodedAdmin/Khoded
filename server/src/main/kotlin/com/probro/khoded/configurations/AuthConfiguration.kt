@@ -25,7 +25,6 @@ fun Application.configureAuthentication(httpClient: HttpClient) {
             }
             realm = "Access to the '${Users.Edit}' path"
             validate { userPasswordCredential ->
-
                 val result = UserRepository.getUserByUserName(userPasswordCredential.name)
                     .firstOrNull { local ->
                         local.name == userPasswordCredential.name
@@ -61,6 +60,7 @@ fun Application.configureAuthentication(httpClient: HttpClient) {
                     extraAuthParameters = listOf("access_type" to "offline"),
                     onStateCreated = { call, state ->
                         //saves new state with redirect url value
+                        println("state was $state")
                         call.request.queryParameters["redirectUrl"]?.let {
                             OAuthUtils.redirects[state] = it
                         }
