@@ -39,7 +39,6 @@ object Employees : UUIDTable("Employees") {
 
 class Employee(id: EntityID<UUID>) : UUIDEntity(id) {
     companion object : UUIDEntityClass<Employee>(Employees)
-
     var employeeNumber by Employees.employeeNumber
     var role by Employees.role
 }
